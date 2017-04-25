@@ -1,0 +1,62 @@
+#grab gofed from https://github.com/gofed/gofed
+#follow instructions for install
+
+#choose which version of the repo you want to build. For kompose it was 1.0.0-rc2 and the commit was 36b772f752493387e6ecba66b6e4af3837e8438e
+
+#run the following to generate spec file:
+$ gofed repo2spec --detect github.com/minishift/minishift --commit 36b772f752493387e6ecba66b6e4af3837e8438e --with-extra --with-build -f
+
+# spec file now at:
+$PWD/golang-github-minishift-minishift
+
+# Go through and fix up things - see diff between minishift.spec and golang-github-minishift-minishift.spec 
+
+#The above spec file is copied to $PWD as minishift.spec
+
+#Now we need to findout the bundle provides and put that in the spec. Follow the steps below
+#1. git clone the minishift source
+#2. copy the parsedeps.go to root of the source code.
+#3. Run parsedeps.go as `go run parsedeps.go`
+# should be done by gofed at some point - https://github.com/gofed/gofed/issues/42
+
+$ spectool -g -R minishift.spec
+
+$ rpmbuild -ba minishift.spec
+
+
+
+
+========================
+$ gofed repo2spec --detect github.com/minishift/minishift --commit 36b772f752493387e6ecba66b6e4af3837e8438e --with-extra --with-build -f
+Repo URL: github.com/minishift/minishift
+Commit: 36b772f752493387e6ecba66b6e4af3837e8438e
+Name: golang-github-minishift-minishift
+
+(1/4) Checking if the package already exists in PkgDB
+(2/4) Collecting data
+(3/4) Generating spec file
+(4/4) Discovering golang dependencies
+Discovering package dependencies
+	Class: github.com/asaskevich/govalidator (golang-github-asaskevich-govalidator) PkgDB=False
+	Class: github.com/blang/semver (golang-github-blang-semver) PkgDB=True
+	Class: github.com/docker/go-units (golang-github-docker-go-units) PkgDB=True
+	Class: github.com/docker/machine (golang-github-docker-machine) PkgDB=False
+	Class: github.com/golang/glog (golang-github-golang-glog) PkgDB=True
+	Class: github.com/google/go-github (golang-github-google-go-github) PkgDB=True
+	Class: github.com/inconshreveable/go-update (golang-github-inconshreveable-go-update) PkgDB=False
+	Class: github.com/kardianos/osext (golang-github-kardianos-osext) PkgDB=False
+	Class: github.com/olekukonko/tablewriter (golang-github-olekukonko-tablewriter) PkgDB=True
+	Class: github.com/pborman/uuid (golang-googlecode-uuid) PkgDB=True
+	Class: github.com/pkg/browser (golang-github-pkg-browser) PkgDB=False
+	Class: github.com/pkg/errors (golang-github-pkg-errors) PkgDB=True
+	Class: github.com/spf13/cobra (golang-github-spf13-cobra) PkgDB=True
+	Class: github.com/spf13/pflag (golang-github-spf13-pflag) PkgDB=True
+	Class: github.com/spf13/viper (golang-github-spf13-viper) PkgDB=True
+	Class: golang.org/x/crypto (golang-googlecode-go-crypto) PkgDB=True
+	Class: golang.org/x/oauth2 (golang-googlecode-goauth2) PkgDB=True
+	Class: gopkg.in/yaml.v2 (golang-gopkg-yaml) PkgDB=True
+
+Discovering test dependencies
+	Class: github.com/DATA-DOG/godog (golang-github-DATA-DOG-godog) PkgDB=False
+	Class: github.com/docker/machine (golang-github-docker-machine) PkgDB=False
+
